@@ -47,10 +47,6 @@ open class PresentationController: PagesController {
         scrollView?.delegate = self
       }
     }
-
-    animateAtIndex(0, perform: { animation in
-      animation.play()
-    })
   }
 
   // MARK: - Public methods

@@ -6,6 +6,7 @@ public class DissolveAnimation: NSObject, Animatable {
   private let delay: TimeInterval
   private var initial: Bool
   private var played = false
+  private var isFadeIn = false
 
   public init(content: Content,
               duration: TimeInterval = 1.0,
@@ -15,7 +16,7 @@ public class DissolveAnimation: NSObject, Animatable {
       self.duration = duration
       self.delay = delay
       self.initial = initial
-
+      self.isFadeIn = isFadeIn
       content.view.alpha = 0.0
 
       super.init()
@@ -43,32 +44,35 @@ public class DissolveAnimation: NSObject, Animatable {
 // MARK: - Animatable
 
 extension DissolveAnimation {
-  public func play() {
-    if content.view.superview != nil {
-      if !(initial && played) {
-        content.view.alpha = 0.0
-        animate()
-      }
+    public func play() {
+        if content.view.superview != nil {
+            if !(initial && played) {
+                content.view.alpha = (isFadeIn) ? 1.0 : 0.0
+                animate()
+            }
+        }
     }
-  }
-
-  public func playBack() {
-    if content.view.superview != nil {
-      if !(initial && played) {
-        content.view.alpha = 1.0
-        animate()
-      }
+    
+    public func playBack() {
+        if content.view.superview != nil {
+            if !(initial && played) {
+                content.view.alpha = (isFadeIn) ? 0.0 : 1.0
+                animate()
+            }
+        }
     }
-  }
-
-  public func moveWith(offsetRatio: CGFloat) {
-    let view = content.view
-
-    if view.layer.animationKeys() == nil {
-      if view.superview != nil {
-        let ratio = offsetRatio > 0.0 ? offsetRatio : (1.0 + offsetRatio)
-        view.alpha = max(0.0, min(1.0, ratio))
-      }
+    
+    public func moveWith(offsetRatio: CGFloat) {
+        let view = content.view
+        if view.layer.animationKeys() == nil {
+            if view.superview != nil {
+                var ratio = offsetRatio > 0.0 ?  1 - offsetRatio : (0 - offsetRatio)
+                if isFadeIn {
+                    ratio = offsetRatio > 0.0 ? offsetRatio : (1.0 + (offsetRatio * 1.5))
+                }
+                view.alpha = ratio
+            }
+        }
     }
-  }
 }
+
