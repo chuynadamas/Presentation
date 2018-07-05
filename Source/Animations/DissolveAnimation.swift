@@ -11,7 +11,8 @@ public class DissolveAnimation: NSObject, Animatable {
   public init(content: Content,
               duration: TimeInterval = 1.0,
               delay: TimeInterval = 0.0,
-              initial: Bool = false) {
+              initial: Bool = false,
+              isFadeIn: Bool = false) {
       self.content = content
       self.duration = duration
       self.delay = delay
